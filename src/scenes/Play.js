@@ -36,7 +36,7 @@ class Play extends Phaser.Scene {
         });
         this.p1Score = 0;
         let scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Georgia',
             fontSize: '28px',
             backgroundColor: '#F3B141',
             color: '#843605',
@@ -56,9 +56,22 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true
         }, null, this);
+
+        this.timer = this.time.addEvent({ delay: game.settings.gameTimer});
+        this.remaining = this.timer.getRemaining();
+
+        scoreConfig.fixedWidth = 100;
+        this.timeShow = this.add.text(game.config.width - scoreConfig.fixedWidth - borderUISize - borderpadding, borderUISize + borderpadding * 2, this.remaining, scoreConfig);
+        this.seconds = 0;
+        scoreConfig.fixedWidth = 0;
+
     }
 
     update() {
+
+        this.seconds = this.timer.getRemaining() / 1000;
+        this.timeShow.text = Math.ceil(this.seconds);
+        
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
